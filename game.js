@@ -7,13 +7,13 @@ const treasures = [
 const itemsForSale = [
   { name: "Mystic Map", image: "mystic-map.png", cost: 30 },
   { name: "Golden Key", image: "golden-key.png", cost: 50 },
-  { name: "Fire Charm", image: "fire-charm(1).png", cost: 70 }
+  { name: "Fire Charm", image: "fire-charm (1).png", cost: 70 }
 ];
 
 const locations = [
   {
     name: "Mystic Forest",
-    background: "forest(1).png",
+    background: "forest (1).png",
     requiredItem: "Mystic Map",
     story: "The forest whispers ancient secrets. Find the exit through the maze.",
     game: "maze"
@@ -27,7 +27,7 @@ const locations = [
   },
   {
     name: "Ancient Castle",
-    background: "castle(1).png",
+    background: "castle (1).png",
     requiredItem: "Golden Key",
     story: "Guarded by riddles and magic, defend yourself and shoot enemies to advance.",
     game: "shooter"
