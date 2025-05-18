@@ -14,13 +14,13 @@ const treasures = [
 const shopItems = [
   { name: "Mystic Map", img: "mystic-map.png", price: 30, desc: "Required for Mystic Forest" },
   { name: "Golden Key", img: "golden-key.png", price: 50, desc: "Required for Ancient Castle" },
-  { name: "Fire Charm", img: "fire-charm.png", price: 70, desc: "Required for Volcanic Crater" }
+  { name: "Fire-Charm(1)", img: "fire-charm.png", price: 70, desc: "Required for Volcanic Crater" }
 ];
 
 const locations = [
   {
     name: "Mystic Forest",
-    background: "forest.jpg",
+    background: "forest(1).png",
     requiredItem: "Mystic Map",
     riddle: "I have leaves but I'm not a book, what am I?",
     riddleAnswer: "tree",
@@ -29,7 +29,7 @@ const locations = [
   },
   {
     name: "Ancient Castle",
-    background: "castle.jpg",
+    background: "castle(1).png",
     requiredItem: "Golden Key",
     riddle: "What has keys but can't open locks?",
     riddleAnswer: "piano",
@@ -38,7 +38,7 @@ const locations = [
   },
   {
     name: "Volcanic Crater",
-    background: "volcano.jpg",
+    background: "volcano.png",
     requiredItem: "Fire Charm",
     riddle: "I can be cracked, made, told, and played. What am I?",
     riddleAnswer: "joke",
