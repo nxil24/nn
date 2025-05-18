@@ -20,7 +20,7 @@ const shopItems = [
 const locations = [
   {
     name: "Mystic Forest",
-    background: "forest-bg.jpg",
+    background: "forest.jpg",
     requiredItem: "Mystic Map",
     riddle: "I have leaves but I'm not a book, what am I?",
     riddleAnswer: "tree",
@@ -29,7 +29,7 @@ const locations = [
   },
   {
     name: "Ancient Castle",
-    background: "castle-bg.jpg",
+    background: "castle.jpg",
     requiredItem: "Golden Key",
     riddle: "What has keys but can't open locks?",
     riddleAnswer: "piano",
@@ -38,7 +38,7 @@ const locations = [
   },
   {
     name: "Volcanic Crater",
-    background: "volcano-bg.jpg",
+    background: "volcano.jpg",
     requiredItem: "Fire Charm",
     riddle: "I can be cracked, made, told, and played. What am I?",
     riddleAnswer: "joke",
