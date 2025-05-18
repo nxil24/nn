@@ -2,60 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Treasure Hunt: Adventure Edition</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <h1>🏝️ Treasure Hunt: Adventure Edition</h1>
-    <p>Explore, complete quests, and collect treasures!</p>
+    <p id="player-info">Loading profile...</p>
   </header>
 
-  <section id="profile-section">
-    <label for="profile-select">Select Profile:</label>
-    <select id="profile-select"></select>
-    <button id="create-profile-btn">New Profile</button>
-    <p id="welcome-msg"></p>
-  </section>
+  <main id="game-container">
+    <section id="status-panel">
+      <p id="status">Status: Ready to explore!</p>
+      <h2>Coins: <span id="coin-balance">0</span></h2>
+      <h3>Level: <span id="player-level">1</span></h3>
+      <button id="explore-btn">Explore</button>
+      <button id="shop-btn">🛒 Shop</button>
+    </section>
 
-  <section id="coin-balance-section">
-    <h2>Coins: <span id="coin-balance">0</span></h2>
-  </section>
+    <section id="shop" class="panel hidden">
+      <h2>In-Game Shop</h2>
+      <div id="shop-shelf"></div>
+      <button id="close-shop-btn">Close Shop</button>
+    </section>
 
-  <section id="game-area">
-    <div id="location-buttons"></div>
-  </section>
+    <section id="locations" class="panel">
+      <h2>🌍 Choose a Location</h2>
+      <div id="location-buttons"></div>
+    </section>
 
-  <section id="location-story" class="hidden">
-    <h2 id="location-name"></h2>
-    <p id="location-desc"></p>
-    <p id="riddle-text"></p>
-    <button id="start-quest-btn">Start Quest</button>
-    <button id="back-to-locations-btn">Back to Locations</button>
-  </section>
+    <section id="location-area" class="panel hidden">
+      <h2 id="location-title"></h2>
+      <div id="location-background"></div>
+      <p id="location-story"></p>
+      <div id="location-mini-game"></div>
+      <button id="exit-location-btn">Exit Location</button>
+    </section>
 
-  <section id="mini-game" class="hidden">
-    <h2 id="mini-game-title"></h2>
-    <div id="mini-game-container"></div>
-    <button id="exit-mini-game-btn">Exit Mini-Game</button>
-  </section>
-
-  <section id="shop-section" class="hidden">
-    <h2>🛒 Shop</h2>
-    <div id="shop-items"></div>
-    <button id="close-shop-btn">Close Shop</button>
-  </section>
-
-  <section id="collected-treasures">
-    <h2>Your Collected Treasures</h2>
-    <div id="nft-list"></div>
-  </section>
+    <section id="nft-collection" class="panel">
+      <h2>Your Treasures</h2>
+      <div id="nft-list"></div>
+    </section>
+  </main>
 
   <footer>
-    <button id="open-shop-btn">Open Shop</button>
-    <p>Powered by Fun and JavaScript!</p>
+    <p>Powered by Fun, JavaScript & Imagination 🎮</p>
   </footer>
+
+  <audio id="sound-explore" src="sounds/explore.mp3"></audio>
+  <audio id="sound-coin" src="sounds/coin.mp3"></audio>
+  <audio id="sound-shop" src="sounds/shop.mp3"></audio>
 
   <script src="game.js"></script>
 </body>
