@@ -1,80 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Treasure Hunt: Adventure Edition</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Treasure Hunt: Adventure Edition</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>
+    <h1>🏝️ Treasure Hunt: Adventure Edition</h1>
+    <p>Explore, complete quests, and collect treasures!</p>
+  </header>
 
-<header>
-  <h1>Treasure Hunt: Adventure Edition</h1>
-  <div id="welcome-msg"></div>
-  <div>Coins: <span id="coin-balance">0</span> | 
-      <button id="shop-btn">Shop</button> 
-      <button id="mute-btn">Mute</button>
-  </div>
-</header>
+  <section id="profile-section">
+    <label for="profile-select">Select Profile:</label>
+    <select id="profile-select"></select>
+    <button id="create-profile-btn">New Profile</button>
+    <p id="welcome-msg"></p>
+  </section>
 
-<section id="profile-section">
-  <input type="text" id="profile-input" placeholder="Enter player name" />
-  <button id="create-profile-btn">Create Profile</button>
-  <select id="profile-select" class="hidden"></select>
-  <button id="delete-profile-btn" class="hidden">Delete Profile</button>
-</section>
+  <section id="coin-balance-section">
+    <h2>Coins: <span id="coin-balance">0</span></h2>
+  </section>
 
-<section id="game-area" class="hidden">
-
-  <section id="locations">
-    <h2>Choose a Location to Explore</h2>
+  <section id="game-area">
     <div id="location-buttons"></div>
   </section>
 
   <section id="location-story" class="hidden">
     <h2 id="location-name"></h2>
-    <p id="location-story-text"></p>
-    <div id="riddle-section">
-      <div id="riddle-question"></div>
-      <input type="text" id="riddle-answer" placeholder="Your answer here" autocomplete="off" />
-      <button id="submit-riddle-btn">Submit</button>
-      <div id="riddle-feedback"></div>
-    </div>
+    <p id="location-desc"></p>
+    <p id="riddle-text"></p>
+    <button id="start-quest-btn">Start Quest</button>
+    <button id="back-to-locations-btn">Back to Locations</button>
   </section>
 
   <section id="mini-game" class="hidden">
     <h2 id="mini-game-title"></h2>
-    <div id="game-instructions"></div>
-
-    <!-- Maze game container -->
-    <div id="maze-game" class="hidden"></div>
-    <div id="maze-controls" class="hidden">
-      <button id="maze-up">↑</button><br />
-      <button id="maze-left">←</button>
-      <button id="maze-down">↓</button>
-      <button id="maze-right">→</button>
-    </div>
-
-    <!-- Memory game container -->
-    <div id="memory-game-board" class="hidden"></div>
-
-    <!-- Shooting game container -->
-    <canvas id="shooting-canvas" class="hidden"></canvas>
-
-    <button id="exit-mini-game" class="hidden">Exit Mini-Game</button>
+    <div id="mini-game-container"></div>
+    <button id="exit-mini-game-btn">Exit Mini-Game</button>
   </section>
 
-</section>
-
-<!-- Shop Modal -->
-<div id="shop" class="hidden">
-  <div id="shop-container">
-    <h2>Shop</h2>
+  <section id="shop-section" class="hidden">
+    <h2>🛒 Shop</h2>
     <div id="shop-items"></div>
     <button id="close-shop-btn">Close Shop</button>
-  </div>
-</div>
+  </section>
 
-<script src="script.js"></script>
+  <section id="collected-treasures">
+    <h2>Your Collected Treasures</h2>
+    <div id="nft-list"></div>
+  </section>
+
+  <footer>
+    <button id="open-shop-btn">Open Shop</button>
+    <p>Powered by Fun and JavaScript!</p>
+  </footer>
+
+  <script src="game.js"></script>
 </body>
 </html>
