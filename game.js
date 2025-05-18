@@ -1,702 +1,564 @@
-// ==== Data ====
-const locations = [
-  {
-    id: "forest",
-    name: "Enchanted Forest",
-    bg: "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80')",
-    story: "The Enchanted Forest hides many secrets. Solve the riddle to find your path.",
-    riddle: {
-      question: "I have roots but no branches, I have leaves but I'm not a tree. What am I?",
-      answer: "book",
-    },
-    requiredItem: "Mystic Map",
-    miniGame: "maze",
-  },
-  {
-    id: "volcano",
-    name: "Volcanic Crater",
-    bg: "url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1350&q=80')",
-    story: "The Volcano is hot and dangerous. Use your memory to survive.",
-    riddle: {
-      question: "What runs but never walks, has a bed but never sleeps?",
-      answer: "river",
-    },
-    requiredItem: "Fire Charm",
-    miniGame: "memory",
-  },
-  {
-    id: "castle",
-    name: "Ancient Castle",
-    bg: "url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1350&q=80')",
-    story: "The Castle guards many treasures. Aim well to conquer.",
-    riddle: {
-      question: "I speak without a mouth and hear without ears. What am I?",
-      answer: "echo",
-    },
-    requiredItem: "Golden Key",
-    miniGame: "shooting",
-  },
+// Data
+const profilesKey = "treasureHuntProfiles";
+let profiles = JSON.parse(localStorage.getItem(profilesKey)) || {};
+let currentProfile = null;
+
+const treasures = [
+  { name: "Gold Coin", image: "gold-coin.png", value: 10 },
+  { name: "Silver Sword", image: "silver-sword.png", value: 20 },
+  { name: "Diamond Ring", image: "diamond-ring.png", value: 50 },
+  { name: "Magic Potion", image: "magic-potion.png", value: 30 },
+  { name: "Ancient Artifact", image: "ancient-artifact.png", value: 100 }
 ];
 
 const shopItems = [
-  {
-    name: "Mystic Map",
-    desc: "Helps you navigate the Enchanted Forest.",
-    price: 15,
-    img: "https://img.icons8.com/emoji/96/000000/world-map-emoji.png",
-  },
-  {
-    name: "Fire Charm",
-    desc: "Protects you in the Volcanic Crater.",
-    price: 25,
-    img: "https://img.icons8.com/color/96/000000/fire-element.png",
-  },
-  {
-    name: "Golden Key",
-    desc: "Opens the Ancient Castle doors.",
-    price: 30,
-    img: "https://img.icons8.com/color/96/000000/key.png",
-  },
+  { name: "Mystic Map", img: "mystic-map.png", price: 30, desc: "Required for Mystic Forest" },
+  { name: "Golden Key", img: "golden-key.png", price: 50, desc: "Required for Ancient Castle" },
+  { name: "Fire Charm", img: "fire-charm.png", price: 70, desc: "Required for Volcanic Crater" }
 ];
 
-// ==== Variables ====
-let profiles = JSON.parse(localStorage.getItem("profiles")) || {};
-let currentProfile = null;
-let currentLocation = null;
-let coins = 0;
-let mute = false;
+const locations = [
+  {
+    name: "Mystic Forest",
+    background: "forest-bg.jpg",
+    requiredItem: "Mystic Map",
+    riddle: "I have leaves but I'm not a book, what am I?",
+    riddleAnswer: "tree",
+    miniGame: "maze",
+    description: "Navigate the maze to find your treasure."
+  },
+  {
+    name: "Ancient Castle",
+    background: "castle-bg.jpg",
+    requiredItem: "Golden Key",
+    riddle: "What has keys but can't open locks?",
+    riddleAnswer: "piano",
+    miniGame: "shooting",
+    description: "Shoot the targets to prove your skill."
+  },
+  {
+    name: "Volcanic Crater",
+    background: "volcano-bg.jpg",
+    requiredItem: "Fire Charm",
+    riddle: "I can be cracked, made, told, and played. What am I?",
+    riddleAnswer: "joke",
+    miniGame: "memory",
+    description: "Match pairs in the memory game."
+  }
+];
 
-// Elements
-const welcomeMsg = document.getElementById("welcome-msg");
-const coinBalance = document.getElementById("coin-balance");
-const shopBtn = document.getElementById("shop-btn");
-const muteBtn = document.getElementById("mute-btn");
-
-const profileInput = document.getElementById("profile-input");
-const createProfileBtn = document.getElementById("create-profile-btn");
+// DOM Elements
 const profileSelect = document.getElementById("profile-select");
-const deleteProfileBtn = document.getElementById("delete-profile-btn");
-
-const gameArea = document.getElementById("game-area");
+const createProfileBtn = document.getElementById("create-profile-btn");
+const welcomeMsg = document.getElementById("welcome-msg");
+const coinBalanceSpan = document.getElementById("coin-balance");
 const locationButtonsDiv = document.getElementById("location-buttons");
 const locationStorySection = document.getElementById("location-story");
-const locationName = document.getElementById("location-name");
-const locationStoryText = document.getElementById("location-story-text");
-
-const riddleSection = document.getElementById("riddle-section");
-const riddleQuestion = document.getElementById("riddle-question");
-const riddleAnswerInput = document.getElementById("riddle-answer");
-const submitRiddleBtn = document.getElementById("submit-riddle-btn");
-const riddleFeedback = document.getElementById("riddle-feedback");
-
+const locationNameH2 = document.getElementById("location-name");
+const locationDescP = document.getElementById("location-desc");
+const riddleTextP = document.getElementById("riddle-text");
+const startQuestBtn = document.getElementById("start-quest-btn");
+const backToLocationsBtn = document.getElementById("back-to-locations-btn");
 const miniGameSection = document.getElementById("mini-game");
 const miniGameTitle = document.getElementById("mini-game-title");
-const gameInstructions = document.getElementById("game-instructions");
-
-const mazeGameDiv = document.getElementById("maze-game");
-const mazeControls = document.getElementById("maze-controls");
-const mazeUpBtn = document.getElementById("maze-up");
-const mazeLeftBtn = document.getElementById("maze-left");
-const mazeDownBtn = document.getElementById("maze-down");
-const mazeRightBtn = document.getElementById("maze-right");
-
-const memoryGameBoard = document.getElementById("memory-game-board");
-const shootingCanvas = document.getElementById("shooting-canvas");
-const exitMiniGameBtn = document.getElementById("exit-mini-game");
-
-const shopModal = document.getElementById("shop");
-const shopContainer = document.getElementById("shop-container");
+const miniGameContainer = document.getElementById("mini-game-container");
+const exitMiniGameBtn = document.getElementById("exit-mini-game-btn");
+const shopSection = document.getElementById("shop-section");
 const shopItemsDiv = document.getElementById("shop-items");
+const openShopBtn = document.getElementById("open-shop-btn");
 const closeShopBtn = document.getElementById("close-shop-btn");
+const nftListDiv = document.getElementById("nft-list");
+const gameArea = document.getElementById("game-area");
 
-// ==== Helper Functions ====
+// Utility Functions
 
 function saveProfiles() {
-  localStorage.setItem("profiles", JSON.stringify(profiles));
+  localStorage.setItem(profilesKey, JSON.stringify(profiles));
+}
+
+function updateProfileSelect() {
+  profileSelect.innerHTML = "";
+  Object.keys(profiles).forEach(profileName => {
+    const option = document.createElement("option");
+    option.value = profileName;
+    option.textContent = profileName;
+    profileSelect.appendChild(option);
+  });
+  if (currentProfile && profiles[currentProfile]) {
+    profileSelect.value = currentProfile;
+  }
 }
 
 function updateWelcome() {
-  if(currentProfile){
+  if (currentProfile) {
     welcomeMsg.textContent = `Welcome, ${currentProfile}!`;
+    updateCoins();
+    renderCollectedTreasures();
+    createLocationButtons();
   } else {
-    welcomeMsg.textContent = "";
+    welcomeMsg.textContent = "Please create or select a profile.";
   }
 }
 
 function updateCoins() {
-  coinBalance.textContent = coins;
+  if (currentProfile) {
+    coinBalanceSpan.textContent = profiles[currentProfile].coins || 0;
+  }
 }
 
-function changeBackground(imageUrl) {
-  document.body.style.backgroundImage = imageUrl;
-}
+function renderCollectedTreasures() {
+  nftListDiv.innerHTML = "";
+  if (!currentProfile) return;
 
-function resetGameSections() {
-  locationStorySection.classList.add("hidden");
-  miniGameSection.classList.add("hidden");
-  mazeGameDiv.classList.add("hidden");
-  mazeControls.classList.add("hidden");
-  memoryGameBoard.classList.add("hidden");
-  shootingCanvas.classList.add("hidden");
-  exitMiniGameBtn.classList.add("hidden");
-  riddleFeedback.textContent = "";
-  riddleAnswerInput.value = "";
-}
-
-function loadProfileNames(){
-  if(Object.keys(profiles).length === 0){
-    profileSelect.classList.add("hidden");
-    deleteProfileBtn.classList.add("hidden");
+  const treasures = profiles[currentProfile].collectedTreasures || [];
+  if (treasures.length === 0) {
+    nftListDiv.textContent = "No treasures collected yet.";
     return;
   }
-  profileSelect.innerHTML = "";
-  Object.keys(profiles).forEach(name => {
-    const option = document.createElement("option");
-    option.value = name;
-    option.textContent = name;
-    profileSelect.appendChild(option);
+  treasures.forEach(t => {
+    const div = document.createElement("div");
+    div.className = "nft-item";
+    div.innerHTML = `<img src="${t.image}" alt="${t.name}"><p>${t.name}</p>`;
+    nftListDiv.appendChild(div);
   });
-  profileSelect.classList.remove("hidden");
-  deleteProfileBtn.classList.remove("hidden");
 }
-
-function showShop() {
-  shopModal.classList.remove("hidden");
-}
-
-function hideShop() {
-  shopModal.classList.add("hidden");
-}
-
-function addCoins(amount){
-  coins += amount;
-  updateCoins();
-  if(currentProfile){
-    profiles[currentProfile].coins = coins;
-    saveProfiles();
-  }
-}
-
-// ==== Profile management ====
-
-createProfileBtn.addEventListener("click", () => {
-  const name = profileInput.value.trim();
-  if(!name){
-    alert("Please enter a name.");
-    return;
-  }
-  if(profiles[name]){
-    alert("Profile with this name already exists.");
-    return;
-  }
-  profiles[name] = { coins: 50, items: [] };
-  currentProfile = name;
-  coins = 50;
-  saveProfiles();
-  updateWelcome();
-  updateCoins();
-  loadProfileNames();
-  profileInput.value = "";
-  profileSelect.value = currentProfile;
-  gameArea.classList.remove("hidden");
-});
-
-profileSelect.addEventListener("change", () => {
-  const selected = profileSelect.value;
-  if(selected && profiles[selected]){
-    currentProfile = selected;
-    coins = profiles[selected].coins || 0;
-    updateWelcome();
-    updateCoins();
-    gameArea.classList.remove("hidden");
-  }
-});
-
-deleteProfileBtn.addEventListener("click", () => {
-  if(currentProfile && confirm(`Delete profile "${currentProfile}"?`)){
-    delete profiles[currentProfile];
-    currentProfile = null;
-    coins = 0;
-    saveProfiles();
-    updateWelcome();
-    updateCoins();
-    loadProfileNames();
-    gameArea.classList.add("hidden");
-  }
-});
-
-// ==== Location buttons ====
 
 function createLocationButtons() {
   locationButtonsDiv.innerHTML = "";
   locations.forEach(loc => {
-    const container = document.createElement("div");
-    container.className = "location-btn-container";
-
-    const img = document.createElement("img");
-    img.src = loc.bg.replace(/url\(['"]?(.*?)['"]?\)/, "$1");
-    img.alt = loc.name;
-
-    const h3 = document.createElement("h3");
-    h3.textContent = loc.name;
-
     const btn = document.createElement("button");
-    btn.textContent = `Explore ${loc.name}`;
-    btn.addEventListener("click", () => {
-      enterLocation(loc.id);
-    });
-
-    container.appendChild(img);
-    container.appendChild(h3);
-    container.appendChild(btn);
-
-    locationButtonsDiv.appendChild(container);
+    btn.textContent = loc.name;
+    btn.onclick = () => openLocation(loc);
+    locationButtonsDiv.appendChild(btn);
   });
 }
 
-// ==== Enter location ====
-
-function enterLocation(id){
-  const loc = locations.find(l => l.id === id);
-  if(!loc) return;
-
-  if(!currentProfile) {
-    alert("Select or create a profile first!");
+function openLocation(location) {
+  if (!currentProfile) {
+    alert("Select or create a profile first.");
+    return;
+  }
+  // Check required item
+  const hasItem = profiles[currentProfile].items.includes(location.requiredItem);
+  if (!hasItem) {
+    alert(`You need the "${location.requiredItem}" to enter ${location.name}. Visit the shop to get it!`);
     return;
   }
 
-  currentLocation = loc;
+  // Hide main areas
+  gameArea.style.display = "none";
+  shopSection.classList.add("hidden");
 
-  // Check if player has required item
-  const playerItems = profiles[currentProfile].items || [];
-  if(!playerItems.includes(loc.requiredItem)){
-    alert(`You need the item "${loc.requiredItem}" to explore this location. Buy it in the shop!`);
-    return;
-  }
-
-  resetGameSections();
-
-  changeBackground(loc.bg);
-
-  locationName.textContent = loc.name;
-  locationStoryText.textContent = loc.story;
+  // Show location story
   locationStorySection.classList.remove("hidden");
-
-  riddleQuestion.textContent = loc.riddle.question;
-  riddleAnswerInput.value = "";
-  riddleFeedback.textContent = "";
-  riddleSection.classList.remove("hidden");
-
-  miniGameSection.classList.add("hidden");
-}
-
-// ==== Riddle ====
-
-submitRiddleBtn.addEventListener("click", () => {
-  const answer = riddleAnswerInput.value.trim().toLowerCase();
-  const correctAnswer = currentLocation.riddle.answer.toLowerCase();
-  if(answer === correctAnswer){
-    riddleFeedback.style.color = "green";
-    riddleFeedback.textContent = "Correct! Starting mini-game...";
-    startMiniGame(currentLocation.miniGame);
-  } else {
-    riddleFeedback.style.color = "red";
-    riddleFeedback.textContent = "Wrong answer. Try again!";
-  }
-});
-
-// ==== Mini Games ====
-
-exitMiniGameBtn.addEventListener("click", () => {
-  resetGameSections();
-  locationStorySection.classList.remove("hidden");
-  changeBackground(currentLocation.bg);
-});
-
-// ------------- Maze Game -------------
-
-const mazeSize = 10;
-const maze = [];
-let playerPos = { x: 0, y: mazeSize - 1 };
-let mazeExit = { x: mazeSize - 1, y: 0 };
-
-function generateMaze(){
-  maze.length = 0;
-  for(let y=0; y<mazeSize; y++){
-    maze[y] = [];
-    for(let x=0; x<mazeSize; x++){
-      // create walls on borders and some random inner walls
-      if(x === 0 || y === 0 || x === mazeSize-1 || y === mazeSize-1){
-        maze[y][x] = 1; // wall
-      } else if(Math.random() < 0.23){
-        maze[y][x] = 1; // wall
-      } else {
-        maze[y][x] = 0; // path
-      }
+  locationNameH2.textContent = location.name;
+  locationDescP.textContent = location.description;
+  riddleTextP.textContent = `Riddle: ${location.riddle}`;
+  startQuestBtn.onclick = () => {
+    const answer = prompt("Solve the riddle to start the quest:");
+    if (answer && answer.toLowerCase().trim() === location.riddleAnswer.toLowerCase()) {
+      startMiniGame(location);
+    } else {
+      alert("Wrong answer! Try again.");
     }
+  };
+  backToLocationsBtn.onclick = () => {
+    locationStorySection.classList.add("hidden");
+    gameArea.style.display = "block";
+    setBackground('background-home.jpg');
+  };
+
+  setBackground(location.background);
+}
+
+function startMiniGame(location) {
+  locationStorySection.classList.add("hidden");
+  miniGameSection.classList.remove("hidden");
+  miniGameTitle.textContent = `${location.miniGame.toUpperCase()} Mini-Game: ${location.name}`;
+  miniGameContainer.innerHTML = "";
+
+  if (location.miniGame === "maze") {
+    startMazeMiniGame();
+  } else if (location.miniGame === "memory") {
+    startMemoryGame();
+  } else if (location.miniGame === "shooting") {
+    startShootingGame();
   }
-  // Ensure player start and exit clear
-  maze[playerPos.y][playerPos.x] = 0;
-  maze[mazeExit.y][mazeExit.x] = 0;
-}
 
-function renderMaze(){
-  mazeGameDiv.innerHTML = "";
-  for(let y=0; y<mazeSize; y++){
-    for(let x=0; x<mazeSize; x++){
-      const cell = document.createElement("div");
-      cell.className = "maze-cell";
-      if(maze[y][x] === 1){
-        cell.classList.add("maze-wall");
-      }
-      if(x === playerPos.x && y === playerPos.y){
-        cell.classList.add("player");
-      }
-      if(x === mazeExit.x && y === mazeExit.y){
-        cell.style.backgroundColor = "#ffeb3b";
-        cell.style.borderRadius = "8px";
-      }
-      mazeGameDiv.appendChild(cell);
-    }
-  }
-}
-
-function movePlayer(dx, dy){
-  const nx = playerPos.x + dx;
-  const ny = playerPos.y + dy;
-  if(nx < 0 || nx >= mazeSize || ny < 0 || ny >= mazeSize) return;
-  if(maze[ny][nx] === 1) return; // wall
-  playerPos.x = nx;
-  playerPos.y = ny;
-  renderMaze();
-  if(nx === mazeExit.x && ny === mazeExit.y){
-    setTimeout(() => {
-      alert("You escaped the maze! +10 coins");
-      addCoins(10);
-      exitMiniGameBtn.click();
-    }, 200);
-  }
-}
-
-function setupMazeGame(){
-  mazeGameDiv.classList.remove("hidden");
-  mazeControls.classList.remove("hidden");
-  playerPos = { x: 0, y: mazeSize - 1 };
-  generateMaze();
-  renderMaze();
-}
-
-// Maze controls buttons
-mazeUpBtn.onclick = () => movePlayer(0, -1);
-mazeDownBtn.onclick = () => movePlayer(0, 1);
-mazeLeftBtn.onclick = () => movePlayer(-1, 0);
-mazeRightBtn.onclick = () => movePlayer(1, 0);
-
-// Keyboard arrow keys control for maze
-function mazeKeyHandler(e){
-  if(miniGameSection.classList.contains("hidden")) return;
-  if(currentLocation.miniGame !== "maze") return;
-
-  switch(e.key){
-    case "ArrowUp": movePlayer(0, -1); break;
-    case "ArrowDown": movePlayer(0, 1); break;
-    case "ArrowLeft": movePlayer(-1, 0); break;
-    case "ArrowRight": movePlayer(1, 0); break;
-  }
-}
-
-// Touch support for maze swipe detection
-let touchStartX = null;
-let touchStartY = null;
-mazeGameDiv.addEventListener("touchstart", e => {
-  const t = e.touches[0];
-  touchStartX = t.clientX;
-  touchStartY = t.clientY;
-});
-mazeGameDiv.addEventListener("touchend", e => {
-  if(touchStartX === null || touchStartY === null) return;
-  const t = e.changedTouches[0];
-  const dx = t.clientX - touchStartX;
-  const dy = t.clientY - touchStartY;
-  if(Math.abs(dx) > Math.abs(dy)){
-    // horizontal swipe
-    if(dx > 20) movePlayer(1, 0);
-    else if(dx < -20) movePlayer(-1, 0);
-  } else {
-    // vertical swipe
-    if(dy > 20) movePlayer(0, 1);
-    else if(dy < -20) movePlayer(0, -1);
-  }
-  touchStartX = null;
-  touchStartY = null;
-});
-
-// ------------- Memory Game -------------
-
-const symbols = ['🍎', '🍌', '🍒', '🍇', '🍉', '🥝', '🍍', '🥥'];
-
-let memoryCards = [];
-let flippedCards = [];
-let matchedPairs = 0;
-
-function shuffleArray(arr) {
-  for(let i = arr.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-}
-
-function setupMemoryGame() {
-  memoryGameBoard.classList.remove("hidden");
-  memoryGameBoard.innerHTML = "";
-  flippedCards = [];
-  matchedPairs = 0;
-
-  const pairs = symbols.slice(0, 8);
-  memoryCards = pairs.concat(pairs);
-  shuffleArray(memoryCards);
-
-  memoryCards.forEach((sym, idx) => {
-    const card = document.createElement("div");
-    card.className = "memory-card";
-    card.dataset.symbol = sym;
-
-    const front = document.createElement("div");
-    front.className = "front";
-    front.textContent = sym;
-
-    const back = document.createElement("div");
-    back.className = "back";
-    back.textContent = "?";
-
-    card.appendChild(front);
-    card.appendChild(back);
-
-    card.addEventListener("click", () => {
-      if(card.classList.contains("flipped") || flippedCards.length === 2) return;
-      card.classList.add("flipped");
-      flippedCards.push(card);
-      if(flippedCards.length === 2){
-        checkMemoryMatch();
-      }
-    });
-
-    memoryGameBoard.appendChild(card);
-  });
-}
-
-function checkMemoryMatch(){
-  const [card1, card2] = flippedCards;
-  if(card1.dataset.symbol === card2.dataset.symbol){
-    matchedPairs++;
-    flippedCards = [];
-    if(matchedPairs === symbols.length){
-      setTimeout(() => {
-        alert("You matched all pairs! +15 coins");
-        addCoins(15);
-        exitMiniGameBtn.click();
-      }, 400);
-    }
-  } else {
-    setTimeout(() => {
-      card1.classList.remove("flipped");
-      card2.classList.remove("flipped");
-      flippedCards = [];
-    }, 1000);
-  }
-}
-
-// ------------- Shooting Game -------------
-
-const ctx = shootingCanvas.getContext("2d");
-let shootingWidth = 480;
-let shootingHeight = 320;
-let target = null;
-let shotsFired = 0;
-let hits = 0;
-let shootingActive = false;
-
-function resizeCanvas(){
-  const ratio = shootingWidth / shootingHeight;
-  let w = Math.min(window.innerWidth * 0.8, shootingWidth);
-  let h = w / ratio;
-  shootingCanvas.width = w;
-  shootingCanvas.height = h;
-}
-
-function startShootingGame(){
-  shootingCanvas.classList.remove("hidden");
-  exitMiniGameBtn.classList.remove("hidden");
-  shotsFired = 0;
-  hits = 0;
-  shootingActive = true;
-  spawnTarget();
-  drawShootingGame();
-}
-
-function spawnTarget(){
-  const padding = 40;
-  target = {
-    x: Math.random() * (shootingCanvas.width - 2*padding) + padding,
-    y: Math.random() * (shootingCanvas.height - 2*padding) + padding,
-    radius: 25,
-    hit: false,
+  exitMiniGameBtn.onclick = () => {
+    miniGameSection.classList.add("hidden");
+    gameArea.style.display = "block";
+    setBackground('background-home.jpg');
   };
 }
 
-function drawShootingGame(){
-  if(!shootingActive) return;
-  ctx.clearRect(0, 0, shootingCanvas.width, shootingCanvas.height);
-  // Draw target
-  if(target && !target.hit){
-    ctx.beginPath();
-    ctx.arc(target.x, target.y, target.radius, 0, Math.PI * 2);
-    ctx.fillStyle = "#e53935";
-    ctx.fill();
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = "#b71c1c";
-    ctx.stroke();
-
-    // Inner circle
-    ctx.beginPath();
-    ctx.arc(target.x, target.y, target.radius/2, 0, Math.PI * 2);
-    ctx.fillStyle = "#ff7961";
-    ctx.fill();
-  }
-  // Draw info
-  ctx.fillStyle = "#000";
-  ctx.font = "16px Arial";
-  ctx.fillText(`Hits: ${hits} / 5`, 10, 20);
-  ctx.fillText(`Shots Fired: ${shotsFired}`, 10, 40);
-
-  requestAnimationFrame(drawShootingGame);
+function setBackground(image) {
+  document.body.style.background = `url('${image}') no-repeat center center fixed`;
+  document.body.style.backgroundSize = "cover";
 }
 
-shootingCanvas.addEventListener("click", (e) => {
-  if(!shootingActive || !target || target.hit) return;
+// Shop
 
-  const rect = shootingCanvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
-
-  const dist = Math.hypot(mx - target.x, my - target.y);
-  shotsFired++;
-
-  if(dist <= target.radius){
-    hits++;
-    target.hit = true;
-    if(hits >= 5){
-      shootingActive = false;
-      setTimeout(() => {
-        alert(`Victory! You scored 5 hits with ${shotsFired} shots. +20 coins`);
-        addCoins(20);
-        exitMiniGameBtn.click();
-      }, 300);
-    } else {
-      setTimeout(() => {
-        spawnTarget();
-      }, 800);
-    }
+openShopBtn.onclick = () => {
+  if (!currentProfile) {
+    alert("Please select or create a profile first.");
+    return;
   }
-});
+  gameArea.style.display = "none";
+  shopSection.classList.remove("hidden");
+  renderShopItems();
+};
 
-// ==== Start MiniGame ====
+closeShopBtn.onclick = () => {
+  shopSection.classList.add("hidden");
+  gameArea.style.display = "block";
+  setBackground('background-home.jpg');
+};
 
-function startMiniGame(name){
-  resetGameSections();
-  miniGameTitle.textContent = `Mini Game: ${name.charAt(0).toUpperCase() + name.slice(1)}`;
-  miniGameSection.classList.remove("hidden");
-  exitMiniGameBtn.classList.remove("hidden");
-
-  if(name === "maze"){
-    setupMazeGame();
-  } else if(name === "memory"){
-    setupMemoryGame();
-  } else if(name === "shooting"){
-    startShootingGame();
-  }
-}
-
-// ==== Shop ====
-
-function renderShop(){
+function renderShopItems() {
   shopItemsDiv.innerHTML = "";
   shopItems.forEach(item => {
-    const itemDiv = document.createElement("div");
-    itemDiv.className = "shop-item";
-
-    const img = document.createElement("img");
-    img.src = item.img;
-    img.alt = item.name;
-
-    const detailsDiv = document.createElement("div");
-    detailsDiv.className = "shop-item-details";
-
-    const title = document.createElement("h4");
-    title.textContent = item.name;
-
-    const desc = document.createElement("p");
-    desc.textContent = item.desc;
-
-    const price = document.createElement("p");
-    price.textContent = `Price: ${item.price} coins`;
-
-    const buyBtn = document.createElement("button");
-    buyBtn.textContent = "Buy";
-    buyBtn.addEventListener("click", () => {
-      if(coins >= item.price){
-        coins -= item.price;
-        profiles[currentProfile].coins = coins;
-        if(!profiles[currentProfile].items) profiles[currentProfile].items = [];
-        if(!profiles[currentProfile].items.includes(item.name)){
-          profiles[currentProfile].items.push(item.name);
-        }
-        saveProfiles();
-        updateCoins();
-        alert(`You bought ${item.name}!`);
-        renderShop();
-      } else {
-        alert("Not enough coins.");
-      }
-    });
-
-    detailsDiv.appendChild(title);
-    detailsDiv.appendChild(desc);
-    detailsDiv.appendChild(price);
-    detailsDiv.appendChild(buyBtn);
-
-    itemDiv.appendChild(img);
-    itemDiv.appendChild(detailsDiv);
-    shopItemsDiv.appendChild(itemDiv);
+    const div = document.createElement("div");
+    div.className = "shop-item";
+    div.innerHTML = `
+      <img src="${item.img}" alt="${item.name}">
+      <h3>${item.name}</h3>
+      <p>${item.desc}</p>
+      <p>Price: ${item.price} coins</p>
+      <button>Buy</button>
+    `;
+    const buyBtn = div.querySelector("button");
+    buyBtn.onclick = () => buyItem(item);
+    shopItemsDiv.appendChild(div);
   });
 }
 
-// ==== Event Listeners ====
-
-shopBtn.addEventListener("click", () => {
-  if(!currentProfile){
-    alert("Please select or create a profile first!");
-    return;
+function buyItem(item) {
+  if (profiles[currentProfile].coins >= item.price) {
+    if (profiles[currentProfile].items.includes(item.name)) {
+      alert("You already own this item.");
+      return;
+    }
+    profiles[currentProfile].coins -= item.price;
+    profiles[currentProfile].items.push(item.name);
+    alert(`You bought: ${item.name}`);
+    saveProfiles();
+    updateCoins();
+    renderShopItems();
+  } else {
+    alert("Not enough coins.");
   }
-  renderShop();
-  showShop();
-});
+}
 
-closeShopBtn.addEventListener("click", () => {
-  hideShop();
-});
+// Profile Management
 
-// ==== Initialize ====
+createProfileBtn.onclick = () => {
+  const name = prompt("Enter new profile name:");
+  if (name && !profiles[name]) {
+    profiles[name] = {
+      coins: 50,
+      items: [],
+      collectedTreasures: []
+    };
+    currentProfile = name;
+    saveProfiles();
+    updateProfileSelect();
+    updateWelcome();
+  } else {
+    alert("Invalid or existing profile name.");
+  }
+};
 
-window.addEventListener("keydown", mazeKeyHandler);
+profileSelect.onchange = () => {
+  currentProfile = profileSelect.value;
+  updateWelcome();
+};
 
-loadProfileNames();
+// Mini-games implementation (simplified for brevity)
+
+// Maze mini-game (Forest)
+function startMazeMiniGame() {
+  miniGameContainer.innerHTML = "";
+  const mazeDesc = document.createElement("p");
+  mazeDesc.textContent = "Use arrow keys or swipe to navigate the maze and find the treasure!";
+  miniGameContainer.appendChild(mazeDesc);
+
+  // Simple maze grid and player
+  const mazeGrid = [
+    [1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,1],
+    [1,0,1,1,1,0,1],
+    [1,0,1,0,1,0,1],
+    [1,0,1,0,0,0,1],
+    [1,0,0,0,1,0,1],
+    [1,1,1,1,1,1,1],
+  ];
+  const rows = mazeGrid.length;
+  const cols = mazeGrid[0].length;
+
+  const gridDiv = document.createElement("div");
+  gridDiv.style.display = "inline-grid";
+  gridDiv.style.gridTemplateColumns = `repeat(${cols}, 30px)`;
+  gridDiv.style.gridTemplateRows = `repeat(${rows}, 30px)`;
+  gridDiv.style.gap = "2px";
+  miniGameContainer.appendChild(gridDiv);
+
+  // Player start position
+  let playerPos = { row: 1, col: 1 };
+  // Treasure position
+  const treasurePos = { row: 5, col: 5 };
+
+  function renderMaze() {
+    gridDiv.innerHTML = "";
+    for(let r=0; r<rows; r++) {
+      for(let c=0; c<cols; c++) {
+        const cell = document.createElement("div");
+        cell.style.width = "30px";
+        cell.style.height = "30px";
+        cell.style.border = "1px solid #333";
+        cell.style.boxSizing = "border-box";
+        if (mazeGrid[r][c] === 1) {
+          cell.style.backgroundColor = "#654321"; // wall brown
+        } else {
+          cell.style.backgroundColor = "#a3d977"; // path green
+        }
+        if (r === playerPos.row && c === playerPos.col) {
+          cell.style.backgroundColor = "#2196F3"; // player blue
+        }
+        if (r === treasurePos.row && c === treasurePos.col) {
+          cell.style.backgroundColor = "#FFD700"; // treasure gold
+        }
+        gridDiv.appendChild(cell);
+      }
+    }
+  }
+
+  function movePlayer(dr, dc) {
+    const newRow = playerPos.row + dr;
+    const newCol = playerPos.col + dc;
+    if (mazeGrid[newRow][newCol] === 0) {
+      playerPos = { row: newRow, col: newCol };
+      renderMaze();
+      if (playerPos.row === treasurePos.row && playerPos.col === treasurePos.col) {
+        alert("You found the treasure in the forest!");
+        rewardPlayer(40, { name: "Forest Treasure", image: "forest-treasure.png" });
+        miniGameSection.classList.add("hidden");
+        gameArea.style.display = "block";
+        setBackground('background-home.jpg');
+      }
+    }
+  }
+
+  // Keyboard controls
+  function handleKey(e) {
+    switch(e.key) {
+      case "ArrowUp": movePlayer(-1,0); break;
+      case "ArrowDown": movePlayer(1,0); break;
+      case "ArrowLeft": movePlayer(0,-1); break;
+      case "ArrowRight": movePlayer(0,1); break;
+    }
+  }
+
+  window.addEventListener("keydown", handleKey);
+
+  // Touch controls (swipe detection)
+  let touchStartX = 0;
+  let touchStartY = 0;
+  miniGameContainer.addEventListener("touchstart", e => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  });
+
+  miniGameContainer.addEventListener("touchend", e => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 30) movePlayer(0,1);
+      else if (dx < -30) movePlayer(0,-1);
+    } else {
+      if (dy > 30) movePlayer(1,0);
+      else if (dy < -30) movePlayer(-1,0);
+    }
+  });
+
+  renderMaze();
+
+  // Cleanup on exit
+  exitMiniGameBtn.onclick = () => {
+    miniGameSection.classList.add("hidden");
+    gameArea.style.display = "block";
+    setBackground('background-home.jpg');
+    window.removeEventListener("keydown", handleKey);
+  };
+}
+
+// Memory mini-game (Volcano)
+function startMemoryGame() {
+  miniGameContainer.innerHTML = "";
+  const instructions = document.createElement("p");
+  instructions.textContent = "Match the pairs to win!";
+  miniGameContainer.appendChild(instructions);
+
+  // Simple memory game data
+  const symbols = ["🍎","🍌","🍒","🍇","🍉","🍍"];
+  const cards = [...symbols, ...symbols];
+  shuffleArray(cards);
+
+  const cardElements = [];
+  let firstCard = null;
+  let matchedPairs = 0;
+
+  const gridDiv = document.createElement("div");
+  gridDiv.style.display = "grid";
+  gridDiv.style.gridTemplateColumns = "repeat(4, 60px)";
+  gridDiv.style.gridGap = "10px";
+  miniGameContainer.appendChild(gridDiv);
+
+  cards.forEach((symbol, index) => {
+    const card = document.createElement("button");
+    card.style.width = "60px";
+    card.style.height = "60px";
+    card.style.fontSize = "30px";
+    card.textContent = "";
+    card.dataset.symbol = symbol;
+    card.onclick = () => {
+      if (card.textContent || cardElements.includes(card)) return;
+      card.textContent = symbol;
+      if (!firstCard) {
+        firstCard = card;
+      } else {
+        if (firstCard.dataset.symbol === card.dataset.symbol) {
+          matchedPairs++;
+          firstCard.disabled = true;
+          card.disabled = true;
+          if (matchedPairs === symbols.length) {
+            alert("You matched all pairs!");
+            rewardPlayer(50, { name: "Volcano Treasure", image: "volcano-treasure.png" });
+            miniGameSection.classList.add("hidden");
+            gameArea.style.display = "block";
+            setBackground('background-home.jpg');
+          }
+          firstCard = null;
+        } else {
+          setTimeout(() => {
+            firstCard.textContent = "";
+            card.textContent = "";
+            firstCard = null;
+          }, 800);
+        }
+      }
+    };
+    gridDiv.appendChild(card);
+    cardElements.push(card);
+  });
+}
+
+// Shooting mini-game (Castle)
+function startShootingGame() {
+  miniGameContainer.innerHTML = "";
+
+  const instructions = document.createElement("p");
+  instructions.textContent = "Click or tap the targets before time runs out!";
+  miniGameContainer.appendChild(instructions);
+
+  const gameAreaDiv = document.createElement("div");
+  gameAreaDiv.style.position = "relative";
+  gameAreaDiv.style.width = "300px";
+  gameAreaDiv.style.height = "200px";
+  gameAreaDiv.style.margin = "20px auto";
+  gameAreaDiv.style.border = "2px solid #fff";
+  miniGameContainer.appendChild(gameAreaDiv);
+
+  let score = 0;
+  let timeLeft = 30; // seconds
+
+  const scoreDisplay = document.createElement("p");
+  scoreDisplay.textContent = `Score: ${score}`;
+  miniGameContainer.appendChild(scoreDisplay);
+
+  const timerDisplay = document.createElement("p");
+  timerDisplay.textContent = `Time left: ${timeLeft}`;
+  miniGameContainer.appendChild(timerDisplay);
+
+  const target = document.createElement("div");
+  target.style.width = "40px";
+  target.style.height = "40px";
+  target.style.backgroundColor = "red";
+  target.style.borderRadius = "50%";
+  target.style.position = "absolute";
+  target.style.cursor = "pointer";
+  gameAreaDiv.appendChild(target);
+
+  function moveTarget() {
+    const maxX = gameAreaDiv.clientWidth - 40;
+    const maxY = gameAreaDiv.clientHeight - 40;
+    const x = Math.floor(Math.random() * maxX);
+    const y = Math.floor(Math.random() * maxY);
+    target.style.left = x + "px";
+    target.style.top = y + "px";
+  }
+
+  target.onclick = () => {
+    score++;
+    scoreDisplay.textContent = `Score: ${score}`;
+    moveTarget();
+  };
+
+  moveTarget();
+
+  const timer = setInterval(() => {
+    timeLeft--;
+    timerDisplay.textContent = `Time left: ${timeLeft}`;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      alert(`Time's up! Your score: ${score}`);
+      if (score >= 5) {
+        rewardPlayer(60, { name: "Castle Treasure", image: "castle-treasure.png" });
+      } else {
+        alert("Score at least 5 to earn a treasure.");
+      }
+      miniGameSection.classList.add("hidden");
+      gameArea.style.display = "block";
+      setBackground('background-home.jpg');
+    }
+  }, 1000);
+
+  exitMiniGameBtn.onclick = () => {
+    clearInterval(timer);
+    miniGameSection.classList.add("hidden");
+    gameArea.style.display = "block";
+    setBackground('background-home.jpg');
+  };
+}
+
+// Reward player helper
+function rewardPlayer(coinsEarned, treasure) {
+  profiles[currentProfile].coins += coinsEarned;
+  if (!profiles[currentProfile].collectedTreasures) profiles[currentProfile].collectedTreasures = [];
+  profiles[currentProfile].collectedTreasures.push(treasure);
+  alert(`You earned ${coinsEarned} coins and found a treasure: ${treasure.name}`);
+  saveProfiles();
+  updateCoins();
+  updateNFTDisplay();
+}
+
+// Utility shuffle array
+function shuffleArray(array) {
+  for(let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+// Initialize on load
+loadProfiles();
+updateProfileSelect();
 updateWelcome();
 updateCoins();
 createLocationButtons();
+updateNFTDisplay();
+setBackground('background-home.jpg');
+</script>
 
-gameArea.classList.add("hidden");
-riddleSection.classList.add("hidden");
-locationStorySection.classList.add("hidden");
-miniGameSection.classList.add("hidden");
-shopModal.classList.add("hidden");
+</body>
+</html>
