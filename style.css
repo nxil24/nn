@@ -1,102 +1,149 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
   background-size: cover;
   color: #fff;
-}
-
-header {
-  text-align: center;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.6);
+  overflow-x: hidden;
 }
 
 #game-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-}
-
-#main-area {
-  width: 100%;
-  max-width: 1200px;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px;
-}
-
-section {
-  margin: 20px 0;
-}
-
-button {
-  background: #00aaff;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  font-size: 16px;
-  margin: 5px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  background: #008fcc;
-  transform: scale(1.05);
-}
-
-#shop-panel,
-#location-play-area {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 8px;
-}
-
-#shop-items,
-#location-buttons,
-#nft-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-}
-
-.shop-item, .nft-item {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  padding: 10px;
   text-align: center;
-  width: 150px;
 }
 
-.shop-item img, .nft-item img {
+header {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+#coin-display {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+#menu-buttons button,
+button {
+  padding: 12px 20px;
+  margin: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  background: #ffc107;
+  color: #000;
+  transition: 0.3s;
+}
+
+#menu-buttons button:hover,
+button:hover {
+  background: #ff9800;
+}
+
+#treasure-info {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#treasure-animation {
+  margin: 20px;
+  display: none;
+}
+
+#treasure-animation img {
   width: 100px;
-  height: 100px;
+  animation: pop 0.5s ease-in-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+.panel {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.panel div {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.popup {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 20px;
+  border-radius: 15px;
+  z-index: 10;
 }
 
 .hidden {
   display: none;
 }
 
-#treasure-animation img {
+.shop-shelf {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.shop-item {
+  width: 150px;
+  background: #222;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.shop-item:hover {
+  background: #444;
+}
+
+.shop-item img {
   width: 100px;
-  animation: pop 0.6s ease-out;
+  height: 100px;
+  object-fit: contain;
 }
 
-@keyframes pop {
-  0% { transform: scale(0); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+#location-container {
+  margin-top: 20px;
+  min-height: 400px;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.4);
 }
 
-footer {
-  margin-top: 40px;
-  font-size: 12px;
-  color: #aaa;
+#mini-game {
+  margin-top: 20px;
+  min-height: 400px;
+  border: 2px dashed #fff;
+  padding: 10px;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+  background: #000;
+  border: 2px solid #fff;
+  border-radius: 10px;
 }
