@@ -1,53 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Treasure Hunt: Adventure Edition</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Treasure Hunt: Adventure Edition</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>
+    <h1>🏝️ Treasure Hunt: Adventure Edition</h1>
+    <p>Explore, collect treasures, and conquer thrilling quests!</p>
+  </header>
 
-<div id="overlay"></div>
+  <main id="main-game">
+    <section id="game-area">
+      <button id="explore-btn">🔍 Explore</button>
+      <p id="status">Status: Ready to explore!</p>
+      <div id="treasure-info"></div>
+      <div id="treasure-animation"></div>
+    </section>
 
-<header>
-  <h1>Treasure Hunt: Adventure Edition</h1>
-  <div id="player-profile">
-    <p><strong>Player:</strong> <span id="player-name">Adventurer</span></p>
-    <p><strong>Coins:</strong> <span id="coin-balance">0</span></p>
-  </div>
-</header>
+    <section id="currency">
+      <h2>💰 Coins: <span id="coin-balance">0</span></h2>
+      <button id="shop-btn">🛒 Open Shop</button>
+    </section>
 
-<main>
-  <section id="main-menu">
-    <button id="explore-btn" class="btn">Explore</button>
-    <button id="shop-btn" class="btn">Open Shop</button>
+    <section id="shop" class="panel hidden">
+      <h2>🛍️ In-Game Shop</h2>
+      <div id="shop-items" class="shelf"></div>
+      <button id="close-shop-btn">❌ Close</button>
+    </section>
 
-    <div id="location-buttons" class="locations"></div>
-    <div id="treasure-info" class="info"></div>
+    <section id="locations" class="panel">
+      <h2>🌍 Travel to a Location</h2>
+      <div id="location-buttons"></div>
+    </section>
 
-    <div id="nft-list" class="treasures"></div>
-  </section>
+    <section id="location-panel" class="panel hidden">
+      <h2 id="location-title"></h2>
+      <div id="mini-game-container"></div>
+      <button id="close-location-btn">🔙 Back</button>
+    </section>
 
-  <section id="shop" class="modal">
-    <div class="modal-content">
-      <h2>Shop</h2>
-      <div id="shop-items" class="shop-shelf"></div>
-      <button id="close-shop-btn" class="btn close-btn">Close Shop</button>
-    </div>
-  </section>
+    <section id="nft-collection" class="panel">
+      <h2>🎒 Collected Treasures</h2>
+      <div id="nft-list"></div>
+    </section>
+  </main>
 
-  <section id="mini-game-container" class="modal">
-    <div class="modal-content">
-      <button id="exit-mini-btn" class="btn close-btn">Exit Game</button>
-      <div id="mini-game-content"></div>
-    </div>
-  </section>
-</main>
+  <footer>
+    <p>Created with Fun & JavaScript ✨</p>
+  </footer>
 
-<audio id="bgm" loop></audio>
-<audio id="sfx" ></audio>
-
-<script src="game.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
