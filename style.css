@@ -1,69 +1,79 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  text-align: center;
   background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
   background-size: cover;
   color: #fff;
 }
 
 header {
-  background-color: rgba(0, 0, 0, 0.6);
+  text-align: center;
   padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
 }
 
-main {
+#game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+#main-area {
+  width: 100%;
+  max-width: 1200px;
   padding: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+}
+
+section {
+  margin: 20px 0;
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #28a745;
-  color: #fff;
+  background: #00aaff;
+  color: white;
   border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  margin: 5px;
   border-radius: 8px;
-  margin: 10px;
-  transition: transform 0.2s;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 button:hover {
+  background: #008fcc;
   transform: scale(1.05);
 }
 
-.panel {
-  background-color: rgba(0, 0, 0, 0.6);
-  margin: 20px auto;
+#shop-panel,
+#location-play-area {
+  background: rgba(255, 255, 255, 0.1);
   padding: 20px;
-  border-radius: 10px;
-  max-width: 1000px;
+  border-radius: 8px;
 }
 
-.hidden {
-  display: none;
-}
-
-#shop-items {
+#shop-items,
+#location-buttons,
+#nft-list {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 20px;
-}
-
-.shelf {
-  background: url('shop-bg.jpg') no-repeat center;
-  background-size: contain;
+  justify-content: center;
+  gap: 15px;
 }
 
 .shop-item, .nft-item {
-  background-color: #fff;
-  color: #000;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
   padding: 10px;
-  border-radius: 8px;
+  text-align: center;
   width: 150px;
-  box-shadow: 0 0 10px #000;
-  transition: transform 0.2s;
 }
 
 .shop-item img, .nft-item img {
@@ -71,17 +81,22 @@ button:hover {
   height: 100px;
 }
 
-.shop-item:hover, .nft-item:hover {
-  transform: scale(1.05);
+.hidden {
+  display: none;
 }
 
-#location-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
+#treasure-animation img {
+  width: 100px;
+  animation: pop 0.6s ease-out;
 }
 
-#mini-game-container {
-  margin-top: 20px;
+@keyframes pop {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+footer {
+  margin-top: 40px;
+  font-size: 12px;
+  color: #aaa;
 }
