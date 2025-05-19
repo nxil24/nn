@@ -1,40 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Treasure Hunt: Adventure Edition</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="game-container">
-    <header>
-      <h1>Treasure Hunt: Adventure Edition</h1>
-      <div id="coin-display">Coins: <span id="coin-balance">0</span></div>
-    </header>
 
-    <div id="main-panel">
-      <div id="menu-buttons">
-        <button id="explore-btn">Explore</button>
-        <button id="shop-btn">Shop</button>
-      </div>
+<div id="game-container">
+  <header>Treasure Hunt: Adventure Edition</header>
 
-      <div id="treasure-info"></div>
-      <div id="treasure-animation"></div>
+  <div id="coin-balance">Coins: 0</div>
+  <div id="status"></div>
 
-      <div id="location-buttons" class="panel"></div>
-      <div id="location-container" class="hidden"></div>
-      <div id="mini-game" class="hidden"></div>
-    </div>
-
-    <div id="shop" class="popup hidden">
-      <div class="shop-header">
-        <h2>In-Game Shop</h2>
-        <button id="close-shop-btn">Close</button>
-      </div>
-      <div id="shop-items" class="shop-shelf"></div>
-    </div>
+  <div id="actions">
+    <button id="explore-btn">Explore</button>
+    <button id="shop-btn">Open Shop</button>
   </div>
 
-  <script src="script.js"></script>
+  <div id="location-buttons"></div>
+
+  <div id="main-area">
+    <section id="nft-list">
+      <h3>Your Treasures</h3>
+    </section>
+  </div>
+
+  <div id="shop-panel" class="hidden">
+    <h3>Shop</h3>
+    <div id="shop-items"></div>
+    <button id="close-shop-btn">Close Shop</button>
+  </div>
+
+  <div id="location-play-area" class="hidden">
+    <h2 id="location-title">Location Game</h2>
+    <div id="location-content"></div>
+    <button id="exit-location">Exit Location</button>
+  </div>
+</div>
+
+<div id="treasure-animation"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
