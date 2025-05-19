@@ -1,56 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🏝️ Treasure Hunt: Adventure Edition</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <title>Treasure Hunt: Adventure Edition</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="game-container">
     <header>
-      <h1>🏝️ Treasure Hunt: Adventure Edition</h1>
-      <p>Explore, quest, and conquer thrilling locations!</p>
+      <h1>Treasure Hunt: Adventure Edition</h1>
+      <div id="coin-display">Coins: <span id="coin-balance">0</span></div>
     </header>
 
-    <div id="main-area">
-      <section id="game-info">
-        <button id="explore-btn">🔍 Explore</button>
-        <p id="status">Status: Ready to explore!</p>
-        <div id="treasure-animation"></div>
-        <h2>Your Coins: <span id="coin-balance">0</span></h2>
-      </section>
+    <div id="main-panel">
+      <div id="menu-buttons">
+        <button id="explore-btn">Explore</button>
+        <button id="shop-btn">Shop</button>
+      </div>
 
-      <section id="shop-section">
-        <button id="shop-btn">🛒 Open Shop</button>
-        <div id="shop-panel" class="hidden">
-          <h2>Shop Shelf</h2>
-          <div id="shop-items"></div>
-          <button id="close-shop-btn">Close Shop</button>
-        </div>
-      </section>
+      <div id="treasure-info"></div>
+      <div id="treasure-animation"></div>
 
-      <section id="locations-section">
-        <h2>🌍 Travel</h2>
-        <div id="location-buttons"></div>
-      </section>
-
-      <section id="location-play-area" class="hidden">
-        <div id="location-content"></div>
-        <button id="exit-location">Exit Location</button>
-      </section>
-
-      <section id="nft-collection">
-        <h2>Your Collected Treasures</h2>
-        <div id="nft-list"></div>
-      </section>
+      <div id="location-buttons" class="panel"></div>
+      <div id="location-container" class="hidden"></div>
+      <div id="mini-game" class="hidden"></div>
     </div>
 
-    <footer>
-      <p>Powered by Imagination ✨</p>
-    </footer>
+    <div id="shop" class="popup hidden">
+      <div class="shop-header">
+        <h2>In-Game Shop</h2>
+        <button id="close-shop-btn">Close</button>
+      </div>
+      <div id="shop-items" class="shop-shelf"></div>
+    </div>
   </div>
 
-  <script src="game.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
